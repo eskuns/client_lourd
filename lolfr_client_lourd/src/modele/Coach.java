@@ -6,11 +6,6 @@ public class Coach {
     private String prenom;
     private String nom;
 
-    // Constructeur par défaut
-    public Coach() {
-    }
-
-    // Getters et Setters
     public int getIdCoach() {
         return idCoach;
     }

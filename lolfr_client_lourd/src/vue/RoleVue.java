@@ -2,96 +2,140 @@ package vue;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import controleur.RoleControleur;
+import java.awt.*;
+import java.util.List;
+import controleur.RoleController;
 import modele.Role;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
 public class RoleVue extends JPanel {
-    private static final long serialVersionUID = 1L;
 
     private JTable table;
-    private JButton addButton, editButton, deleteButton;
-    private RoleControleur roleControleur;
     private DefaultTableModel tableModel;
 
-    public RoleVue(RoleControleur roleControleur) {
-        this.roleControleur = roleControleur;
-        initComponents();
-        loadData();
-    }
+    private JTextField libelleField;
 
-    private void initComponents() {
+    private JButton ajouterButton;
+    private JButton modifierButton;
+    private JButton supprimerButton;
+
+    private RoleController roleController;
+
+    public RoleVue() {
+        roleController = new RoleController();
+
         setLayout(new BorderLayout());
 
-        String[] columnNames = {"ID Rôle", "Nom"};
+        // Panel pour les champs de texte et les boutons
+        JPanel inputPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+
+        JLabel libelleLabel = new JLabel("Libellé:");
+        libelleField = new JTextField();
+        inputPanel.add(libelleLabel);
+        inputPanel.add(libelleField);
+
+        ajouterButton = new JButton("Ajouter");
+        ajouterButton.addActionListener(e -> ajouterRole());
+        inputPanel.add(ajouterButton);
+
+        modifierButton = new JButton("Modifier");
+        modifierButton.addActionListener(e -> modifierRole());
+        inputPanel.add(modifierButton);
+
+        supprimerButton = new JButton("Supprimer");
+        supprimerButton.addActionListener(e -> supprimerRole());
+        inputPanel.add(supprimerButton);
+
+        add(inputPanel, BorderLayout.SOUTH);
+
+        // Tableau pour afficher les rôles
+        String[] columnNames = {"ID", "Libellé"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        addButton = new JButton("Ajouter");
-        editButton = new JButton("Modifier");
-        deleteButton = new JButton("Supprimer");
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(deleteButton);
-
-        add(buttonPanel, BorderLayout.SOUTH);
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addRole();
-            }
-        });
-
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editRole();
-            }
-        });
-
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteRole();
-            }
-        });
+        // Chargement initial des rôles
+        chargerRoles();
     }
 
-    private void loadData() {
-        List<Role> roles = roleControleur.getAllRoles();
+    private void chargerRoles() {
+        // Effacer le tableau existant
+        tableModel.setRowCount(0);
+
+        // Charger les rôles depuis la base de données
+        List<Role> roles = roleController.listerRoles();
+
+        // Ajouter les rôles au tableau
         for (Role role : roles) {
-            Object[] rowData = {role.getIdRole(), role.getNom()};
+            Object[] rowData = {role.getIdRole(), role.getLibelle()};
             tableModel.addRow(rowData);
         }
     }
 
-    private void addRole() {
-        // Implémentez le dialogue pour ajouter un rôle
-    }
+    private void ajouterRole() {
+        String libelle = libelleField.getText();
 
-    private void editRole() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            // Implémentez le dialogue pour modifier un rôle
+        if (!libelle.isEmpty()) {
+            Role nouveauRole = new Role();
+            nouveauRole.setLibelle(libelle);
+
+            if (roleController.ajouterRole(nouveauRole)) {
+                // Ajout réussi, mettre à jour le tableau
+                chargerRoles();
+                // Effacer le champ
+                libelleField.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez saisir le libellé du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void deleteRole() {
+    private void modifierRole() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
-            int roleId = (int) table.getValueAt(selectedRow, 0);
-            roleControleur.deleteRole(roleId);
-            tableModel.removeRow(selectedRow);
+            int idRole = (int) tableModel.getValueAt(selectedRow, 0);
+            String libelle = libelleField.getText();
+
+            if (!libelle.isEmpty()) {
+                Role roleModifie = new Role();
+                roleModifie.setIdRole(idRole);
+                roleModifie.setLibelle(libelle);
+
+                if (roleController.modifierRole(roleModifie)) {
+                    // Modification réussie, mettre à jour le tableau
+                    chargerRoles();
+                    // Effacer le champ
+                    libelleField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la modification du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Veuillez saisir le libellé du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un rôle à modifier", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void supprimerRole() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int idRole = (int) tableModel.getValueAt(selectedRow, 0);
+            int option = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir supprimer ce rôle ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                if (roleController.supprimerRole(idRole)) {
+                    // Suppression réussie, mettre à jour le tableau
+                    chargerRoles();
+                    // Effacer le champ
+                    libelleField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la suppression du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un rôle à supprimer", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

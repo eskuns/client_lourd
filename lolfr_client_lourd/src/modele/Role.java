@@ -4,11 +4,6 @@ public class Role {
     private int idRole;
     private String libelle;
 
-    // Constructeur par défaut
-    public Role() {
-    }
-
-    // Getters et Setters
     public int getIdRole() {
         return idRole;
     }
@@ -25,8 +20,8 @@ public class Role {
         this.libelle = libelle;
     }
 
-    public String getNom() {
+    @Override
+    public String toString() {
         return libelle;
     }
 }
-

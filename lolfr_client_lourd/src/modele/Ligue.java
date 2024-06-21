@@ -5,11 +5,6 @@ public class Ligue {
     private String nom;
     private String region;
 
-    // Constructeur par défaut
-    public Ligue() {
-    }
-
-    // Getters et Setters
     public int getIdLigue() {
         return idLigue;
     }
@@ -34,3 +29,4 @@ public class Ligue {
         this.region = region;
     }
 }
+	

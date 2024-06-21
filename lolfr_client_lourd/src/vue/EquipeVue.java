@@ -2,96 +2,187 @@ package vue;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import controleur.EquipeControleur;
-import modele.Equipe;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
-public class EquipeVue extends JPanel {    
-	private static final long serialVersionUID = 1L;
+import controleur.EquipeController;
+import modele.Equipe;
 
+public class EquipeVue extends JPanel {
     private JTable table;
-    private JButton addButton, editButton, deleteButton;
-    private EquipeControleur equipeControleur;
     private DefaultTableModel tableModel;
+    private JTextField nomField;
+    private JTextField victoireField;
+    private JTextField defaiteField;
+    private JTextField ligueField;
+    private JTextField coachField;
+    private JButton ajouterButton;
+    private JButton modifierButton;
+    private JButton supprimerButton;
 
-    public EquipeVue(EquipeControleur equipeControleur) {
-        this.equipeControleur = equipeControleur;
-        initComponents();
-        loadData();
-    }
+    private EquipeController equipeController;
 
-    private void initComponents() {
+    public EquipeVue() {
+        equipeController = new EquipeController();
+
         setLayout(new BorderLayout());
 
-        String[] columnNames = {"ID Equipe", "Nom", "Victoire", "Défaite", "ID Ligue", "ID Coach"};
+        // Tableau pour afficher les équipes
+        String[] columnNames = {"ID", "Nom", "Victoire", "Défaite", "ID Ligue", "ID Coach"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
+
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        addButton = new JButton("Ajouter");
-        editButton = new JButton("Modifier");
-        deleteButton = new JButton("Supprimer");
+        // Panel pour les champs de texte et boutons
+        JPanel inputPanel = new JPanel(new GridLayout(6, 2));
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(deleteButton);
+        JLabel nomLabel = new JLabel("Nom:");
+        nomField = new JTextField();
+        inputPanel.add(nomLabel);
+        inputPanel.add(nomField);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        JLabel victoireLabel = new JLabel("Victoire:");
+        victoireField = new JTextField();
+        inputPanel.add(victoireLabel);
+        inputPanel.add(victoireField);
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addEquipe();
-            }
-        });
+        JLabel defaiteLabel = new JLabel("Défaite:");
+        defaiteField = new JTextField();
+        inputPanel.add(defaiteLabel);
+        inputPanel.add(defaiteField);
 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editEquipe();
-            }
-        });
+        JLabel ligueLabel = new JLabel("ID Ligue:");
+        ligueField = new JTextField();
+        inputPanel.add(ligueLabel);
+        inputPanel.add(ligueField);
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteEquipe();
-            }
-        });
-    }
+        JLabel coachLabel = new JLabel("ID Coach:");
+        coachField = new JTextField();
+        inputPanel.add(coachLabel);
+        inputPanel.add(coachField);
 
-    private void loadData() {
-        List<Equipe> equipes = equipeControleur.getAllEquipes();
+        ajouterButton = new JButton("Ajouter");
+        ajouterButton.addActionListener(e -> ajouterEquipe());
+        inputPanel.add(ajouterButton);
+
+        modifierButton = new JButton("Modifier");
+        modifierButton.addActionListener(e -> modifierEquipe());
+        inputPanel.add(modifierButton);
+
+        supprimerButton = new JButton("Supprimer");
+        supprimerButton.addActionListener(e -> supprimerEquipe());
+        inputPanel.add(supprimerButton);
+
+        add(inputPanel, BorderLayout.SOUTH);
+
+        // Charger les équipes existantes au démarrage
+        List<Equipe> equipes = equipeController.listerEquipes();
         for (Equipe equipe : equipes) {
-            Object[] rowData = {equipe.getIdEquipe(), equipe.getNom(), equipe.getVictoire(), equipe.getDefaite(), equipe.getIdLigue(), equipe.getIdCoach()};
-            tableModel.addRow(rowData);
+            ajouterLigneDansTableau(equipe);
         }
     }
 
-    private void addEquipe() {
-        // Implémentez le dialogue pour ajouter une équipe
+    private void ajouterEquipe() {
+        String nom = nomField.getText();
+        int victoire = Integer.parseInt(victoireField.getText());
+        int defaite = Integer.parseInt(defaiteField.getText());
+        int idLigue = Integer.parseInt(ligueField.getText());
+        int idCoach = Integer.parseInt(coachField.getText());
+
+        Equipe nouvelleEquipe = new Equipe();
+        nouvelleEquipe.setNom(nom);
+        nouvelleEquipe.setVictoire(victoire);
+        nouvelleEquipe.setDefaite(defaite);
+        nouvelleEquipe.setIdLigue(idLigue);
+        nouvelleEquipe.setIdCoach(idCoach);
+
+        if (equipeController.ajouterEquipe(nouvelleEquipe)) {
+            ajouterLigneDansTableau(nouvelleEquipe);
+            viderChamps();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout de l'équipe.");
+        }
     }
 
-    private void editEquipe() {
+    private void modifierEquipe() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
-            // Implémentez le dialogue pour modifier une équipe
+            int idEquipe = (int) table.getValueAt(selectedRow, 0);
+            String nom = nomField.getText();
+            int victoire = Integer.parseInt(victoireField.getText());
+            int defaite = Integer.parseInt(defaiteField.getText());
+            int idLigue = Integer.parseInt(ligueField.getText());
+            int idCoach = Integer.parseInt(coachField.getText());
+
+            Equipe equipeModifiee = new Equipe();
+            equipeModifiee.setIdEquipe(idEquipe);
+            equipeModifiee.setNom(nom);
+            equipeModifiee.setVictoire(victoire);
+            equipeModifiee.setDefaite(defaite);
+            equipeModifiee.setIdLigue(idLigue);
+            equipeModifiee.setIdCoach(idCoach);
+
+            if (equipeController.modifierEquipe(equipeModifiee)) {
+                mettreAJourLigneDansTableau(selectedRow, equipeModifiee);
+                viderChamps();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors de la modification de l'équipe.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une équipe à modifier.");
         }
     }
 
-    private void deleteEquipe() {
+    private void supprimerEquipe() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
-            int equipeId = (int) table.getValueAt(selectedRow, 0);
-            equipeControleur.deleteEquipe(equipeId);
-            tableModel.removeRow(selectedRow);
+            int idEquipe = (int) table.getValueAt(selectedRow, 0);
+            if (equipeController.supprimerEquipe(idEquipe)) {
+                tableModel.removeRow(selectedRow);
+                viderChamps();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur lors de la suppression de l'équipe.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une équipe à supprimer.");
         }
+    }
+
+    private void ajouterLigneDansTableau(Equipe equipe) {
+        Object[] row = {equipe.getIdEquipe(), equipe.getNom(), equipe.getVictoire(), equipe.getDefaite(),
+                equipe.getIdLigue(), equipe.getIdCoach()};
+        tableModel.addRow(row);
+    }
+
+    private void mettreAJourLigneDansTableau(int rowIndex, Equipe equipe) {
+        tableModel.setValueAt(equipe.getIdEquipe(), rowIndex, 0);
+        tableModel.setValueAt(equipe.getNom(), rowIndex, 1);
+        tableModel.setValueAt(equipe.getVictoire(), rowIndex, 2);
+        tableModel.setValueAt(equipe.getDefaite(), rowIndex, 3);
+        tableModel.setValueAt(equipe.getIdLigue(), rowIndex, 4);
+        tableModel.setValueAt(equipe.getIdCoach(), rowIndex, 5);
+    }
+
+    private void viderChamps() {
+        nomField.setText("");
+        victoireField.setText("");
+        defaiteField.setText("");
+        ligueField.setText("");
+        coachField.setText("");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Gestion des Équipes");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+
+            EquipeVue equipeVue = new EquipeVue();
+            frame.add(equipeVue);
+
+            frame.setVisible(true);
+        });
     }
 }

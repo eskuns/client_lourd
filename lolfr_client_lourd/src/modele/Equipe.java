@@ -8,11 +8,6 @@ public class Equipe {
     private int idLigue;
     private int idCoach;
 
-    // Constructeur par défaut
-    public Equipe() {
-    }
-
-    // Getters et Setters
     public int getIdEquipe() {
         return idEquipe;
     }

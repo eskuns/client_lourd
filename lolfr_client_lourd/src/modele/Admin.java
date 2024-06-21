@@ -4,13 +4,8 @@ public class Admin {
     private int idAdmin;
     private String prenom;
     private String email;
-    private String motDePasse;
+    private String mdp;
 
-    // Constructeur par défaut
-    public Admin() {
-    }
-
-    // Getters et Setters
     public int getIdAdmin() {
         return idAdmin;
     }
@@ -35,11 +30,16 @@ public class Admin {
         this.email = email;
     }
 
-    public String getMotDePasse() {
-        return motDePasse;
+    public String getMdp() {
+        return mdp;
     }
 
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
+
+    @Override
+    public String toString() {
+        return prenom; // Ou une représentation adaptée pour l'affichage
     }
 }

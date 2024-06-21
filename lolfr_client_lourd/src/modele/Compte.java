@@ -6,16 +6,6 @@ public class Compte {
     private String mdp;
     private String email;
 
-    public Compte() {
-    }
-
-    public Compte(int idCompte, String pseudo, String mdp, String email) {
-        this.idCompte = idCompte;
-        this.pseudo = pseudo;
-        this.mdp = mdp;
-        this.email = email;
-    }
-
     public int getIdCompte() {
         return idCompte;
     }
@@ -46,5 +36,10 @@ public class Compte {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return pseudo;
     }
 }
