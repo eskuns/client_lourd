@@ -27,7 +27,6 @@ public class AdminVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Panel pour les champs de texte et les boutons
         JPanel inputPanel = new JPanel(new GridLayout(1, 4, 10, 10));
 
         JLabel prenomLabel = new JLabel("Prénom:");
@@ -59,25 +58,19 @@ public class AdminVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Tableau pour afficher les admins
         String[] columnNames = {"ID", "Prénom", "Email", "Mot de passe"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Chargement initial des admins
         chargerAdmins();
     }
 
     private void chargerAdmins() {
-        // Effacer le tableau existant
         tableModel.setRowCount(0);
-
-        // Charger les admins depuis la base de données
         List<Admin> admins = adminController.listerAdmins();
 
-        // Ajouter les admins au tableau
         for (Admin admin : admins) {
             Object[] rowData = {admin.getIdAdmin(), admin.getPrenom(), admin.getEmail(), admin.getMdp()};
             tableModel.addRow(rowData);
@@ -96,9 +89,7 @@ public class AdminVue extends JPanel {
             nouvelAdmin.setMdp(mdp);
 
             if (adminController.ajouterAdmin(nouvelAdmin)) {
-                // Ajout réussi, mettre à jour le tableau
                 chargerAdmins();
-                // Effacer les champs
                 prenomField.setText("");
                 emailField.setText("");
                 mdpField.setText("");
@@ -126,9 +117,7 @@ public class AdminVue extends JPanel {
                 adminModifie.setMdp(mdp);
 
                 if (adminController.modifierAdmin(adminModifie)) {
-                    // Modification réussie, mettre à jour le tableau
                     chargerAdmins();
-                    // Effacer les champs
                     prenomField.setText("");
                     emailField.setText("");
                     mdpField.setText("");
@@ -139,7 +128,7 @@ public class AdminVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un administrateur à modifier", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sélectionnez un  administrateur à modifier", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -151,9 +140,7 @@ public class AdminVue extends JPanel {
             int confirmation = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir supprimer cet administrateur ?", "Confirmation de suppression", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
                 if (adminController.supprimerAdmin(idAdmin)) {
-                    // Suppression réussie, mettre à jour le tableau
                     chargerAdmins();
-                    // Effacer les champs
                     prenomField.setText("");
                     emailField.setText("");
                     mdpField.setText("");
@@ -162,7 +149,7 @@ public class AdminVue extends JPanel {
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un administrateur à supprimer", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sélectionnez un administrateur à supprimer", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

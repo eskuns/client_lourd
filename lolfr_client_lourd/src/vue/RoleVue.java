@@ -25,7 +25,6 @@ public class RoleVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Panel pour les champs de texte et les boutons
         JPanel inputPanel = new JPanel(new GridLayout(1, 3, 10, 10));
 
         JLabel libelleLabel = new JLabel("Libellé:");
@@ -47,25 +46,20 @@ public class RoleVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Tableau pour afficher les rôles
         String[] columnNames = {"ID", "Libellé"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Chargement initial des rôles
         chargerRoles();
     }
 
     private void chargerRoles() {
-        // Effacer le tableau existant
         tableModel.setRowCount(0);
 
-        // Charger les rôles depuis la base de données
         List<Role> roles = roleController.listerRoles();
 
-        // Ajouter les rôles au tableau
         for (Role role : roles) {
             Object[] rowData = {role.getIdRole(), role.getLibelle()};
             tableModel.addRow(rowData);
@@ -80,9 +74,7 @@ public class RoleVue extends JPanel {
             nouveauRole.setLibelle(libelle);
 
             if (roleController.ajouterRole(nouveauRole)) {
-                // Ajout réussi, mettre à jour le tableau
                 chargerRoles();
-                // Effacer le champ
                 libelleField.setText("");
             } else {
                 JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -104,9 +96,7 @@ public class RoleVue extends JPanel {
                 roleModifie.setLibelle(libelle);
 
                 if (roleController.modifierRole(roleModifie)) {
-                    // Modification réussie, mettre à jour le tableau
                     chargerRoles();
-                    // Effacer le champ
                     libelleField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(this, "Erreur lors de la modification du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -126,9 +116,7 @@ public class RoleVue extends JPanel {
             int option = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir supprimer ce rôle ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 if (roleController.supprimerRole(idRole)) {
-                    // Suppression réussie, mettre à jour le tableau
                     chargerRoles();
-                    // Effacer le champ
                     libelleField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(this, "Erreur lors de la suppression du rôle", "Erreur", JOptionPane.ERROR_MESSAGE);

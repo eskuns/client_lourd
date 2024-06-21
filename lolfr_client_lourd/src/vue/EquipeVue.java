@@ -27,7 +27,6 @@ public class EquipeVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Tableau pour afficher les équipes
         String[] columnNames = {"ID", "Nom", "Victoire", "Défaite", "ID Ligue", "ID Coach"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
@@ -35,7 +34,6 @@ public class EquipeVue extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel pour les champs de texte et boutons
         JPanel inputPanel = new JPanel(new GridLayout(6, 2));
 
         JLabel nomLabel = new JLabel("Nom:");
@@ -77,7 +75,6 @@ public class EquipeVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Charger les équipes existantes au démarrage
         List<Equipe> equipes = equipeController.listerEquipes();
         for (Equipe equipe : equipes) {
             ajouterLigneDansTableau(equipe);
@@ -131,7 +128,7 @@ public class EquipeVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Erreur lors de la modification de l'équipe.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une équipe à modifier.");
+            JOptionPane.showMessageDialog(this, "Sélectionnez une équipe à modifier.");
         }
     }
 
@@ -146,7 +143,7 @@ public class EquipeVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Erreur lors de la suppression de l'équipe.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner une équipe à supprimer.");
+            JOptionPane.showMessageDialog(this, "Sélectionnez une équipe à supprimer.");
         }
     }
 

@@ -27,7 +27,6 @@ public class CompteVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Panel pour les champs de texte et les boutons
         JPanel inputPanel = new JPanel(new GridLayout(1, 4, 10, 10));
 
         JLabel pseudoLabel = new JLabel("Pseudo:");
@@ -59,25 +58,20 @@ public class CompteVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Tableau pour afficher les comptes
         String[] columnNames = {"ID", "Pseudo", "Mot de passe", "Email"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Chargement initial des comptes
         chargerComptes();
     }
 
     private void chargerComptes() {
-        // Effacer le tableau existant
         tableModel.setRowCount(0);
 
-        // Charger les comptes depuis la base de données
         List<Compte> comptes = compteController.listerComptes();
 
-        // Ajouter les comptes au tableau
         for (Compte compte : comptes) {
             Object[] rowData = {compte.getIdCompte(), compte.getPseudo(), compte.getMdp(), compte.getEmail()};
             tableModel.addRow(rowData);
@@ -96,9 +90,7 @@ public class CompteVue extends JPanel {
             nouveauCompte.setEmail(email);
 
             if (compteController.ajouterCompte(nouveauCompte)) {
-                // Ajout réussi, mettre à jour le tableau
                 chargerComptes();
-                // Effacer les champs
                 pseudoField.setText("");
                 mdpField.setText("");
                 emailField.setText("");
@@ -126,9 +118,7 @@ public class CompteVue extends JPanel {
                 compteModifie.setEmail(email);
 
                 if (compteController.modifierCompte(compteModifie)) {
-                    // Modification réussie, mettre à jour le tableau
                     chargerComptes();
-                    // Effacer les champs
                     pseudoField.setText("");
                     mdpField.setText("");
                     emailField.setText("");
@@ -139,7 +129,7 @@ public class CompteVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un compte à modifier", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sélectionnez un compte à modifier.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -151,9 +141,7 @@ public class CompteVue extends JPanel {
             int confirmation = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir supprimer ce compte ?", "Confirmation de suppression", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
                 if (compteController.supprimerCompte(idCompte)) {
-                    // Suppression réussie, mettre à jour le tableau
                     chargerComptes();
-                    // Effacer les champs
                     pseudoField.setText("");
                     mdpField.setText("");
                     emailField.setText("");
@@ -162,7 +150,7 @@ public class CompteVue extends JPanel {
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un compte à supprimer", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sélectionnez un coach à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

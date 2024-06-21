@@ -119,6 +119,5 @@ public class JoueurController {
         return joueurs;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
 
 }

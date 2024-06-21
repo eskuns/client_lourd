@@ -25,7 +25,6 @@ public class CoachVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Tableau pour afficher les coachs
         String[] columnNames = {"ID", "Pseudo", "Prénom", "Nom"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
@@ -33,7 +32,6 @@ public class CoachVue extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel pour les champs de texte et boutons
         JPanel inputPanel = new JPanel(new GridLayout(4, 2));
 
         JLabel pseudoLabel = new JLabel("Pseudo:");
@@ -65,7 +63,6 @@ public class CoachVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Charger les coachs existants au démarrage
         List<Coach> coachs = coachController.listerCoachs();
         for (Coach coach : coachs) {
             ajouterLigneDansTableau(coach);
@@ -111,7 +108,7 @@ public class CoachVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Erreur lors de la modification du coach.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un coach à modifier.");
+            JOptionPane.showMessageDialog(this, "Sélectionnez un coach à modifier.");
         }
     }
 
@@ -126,7 +123,7 @@ public class CoachVue extends JPanel {
                 JOptionPane.showMessageDialog(this, "Erreur lors de la suppression du coach.");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un coach à supprimer.");
+            JOptionPane.showMessageDialog(this, "Sélectionnez un coach à supprimer.");
         }
     }
 

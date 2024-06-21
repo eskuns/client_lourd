@@ -15,9 +15,8 @@ public class DbConnect {
     public DbConnect() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Connexion à la base de données établie !");
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la connexion à la base de données : " + e.getMessage());
+            System.err.println("Erreur de connexion : " + e.getMessage());
         }
     }
 
@@ -31,7 +30,7 @@ public class DbConnect {
                 connection.close();
                 System.out.println("Connexion à la base de données fermée.");
             } catch (SQLException e) {
-                System.err.println("Erreur lors de la fermeture de la connexion : " + e.getMessage());
+                System.err.println("Erreur de fermeture : " + e.getMessage());
             }
         }
     }

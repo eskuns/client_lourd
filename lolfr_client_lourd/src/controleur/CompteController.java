@@ -108,6 +108,4 @@ public class CompteController {
         return comptes;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
-
 }

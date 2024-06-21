@@ -40,6 +40,6 @@ public class Admin {
 
     @Override
     public String toString() {
-        return prenom; // Ou une représentation adaptée pour l'affichage
+        return prenom; 
     }
 }

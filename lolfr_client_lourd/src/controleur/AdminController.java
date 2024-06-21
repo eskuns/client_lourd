@@ -108,6 +108,5 @@ public class AdminController {
         return admins;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
 
 }

@@ -107,7 +107,4 @@ public class CoachController {
         }
         return coachs;
     }
-
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
-
 }

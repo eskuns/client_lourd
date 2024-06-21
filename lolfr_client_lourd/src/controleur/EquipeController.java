@@ -116,7 +116,6 @@ public class EquipeController {
         return equipes;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
 
 }
 	

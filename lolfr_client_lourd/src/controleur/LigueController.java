@@ -105,6 +105,5 @@ public class LigueController {
         return ligues;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
 
 }

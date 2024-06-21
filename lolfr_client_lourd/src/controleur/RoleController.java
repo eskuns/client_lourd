@@ -102,6 +102,5 @@ public class RoleController {
         return roles;
     }
 
-    // Vous pouvez ajouter d'autres méthodes selon vos besoins
 
 }

@@ -28,7 +28,6 @@ public class JoueurVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Tableau pour afficher les joueurs
         String[] columnNames = {"ID", "Pseudo", "Prénom", "Nom", "Nationalité", "ID Équipe", "ID Rôle"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
@@ -36,7 +35,6 @@ public class JoueurVue extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel pour les champs de texte et boutons
         JPanel inputPanel = new JPanel(new GridLayout(7, 2));
 
         JLabel pseudoLabel = new JLabel("Pseudo:");
@@ -83,7 +81,6 @@ public class JoueurVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Charger les joueurs existants au démarrage
         List<Joueur> joueurs = joueurController.listerJoueurs();
         for (Joueur joueur : joueurs) {
             ajouterLigneDansTableau(joueur);

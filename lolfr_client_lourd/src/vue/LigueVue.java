@@ -26,7 +26,6 @@ public class LigueVue extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Panel pour les champs de texte et les boutons
         JPanel inputPanel = new JPanel(new GridLayout(2, 3, 10, 10));
 
         JLabel nomLabel = new JLabel("Nom:");
@@ -53,25 +52,20 @@ public class LigueVue extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Tableau pour afficher les ligues
         String[] columnNames = {"ID", "Nom", "Région"};
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Chargement initial des ligues
         chargerLigues();
     }
 
     private void chargerLigues() {
-        // Effacer le tableau existant
         tableModel.setRowCount(0);
 
-        // Charger les ligues depuis la base de données
         List<Ligue> ligues = ligueController.listerLigues();
 
-        // Ajouter les ligues au tableau
         for (Ligue ligue : ligues) {
             Object[] rowData = {ligue.getIdLigue(), ligue.getNom(), ligue.getRegion()};
             tableModel.addRow(rowData);
@@ -88,9 +82,7 @@ public class LigueVue extends JPanel {
             nouvelleLigue.setRegion(region);
 
             if (ligueController.ajouterLigue(nouvelleLigue)) {
-                // Ajout réussi, mettre à jour le tableau
                 chargerLigues();
-                // Effacer les champs
                 nomField.setText("");
                 regionField.setText("");
             } else {
@@ -115,9 +107,7 @@ public class LigueVue extends JPanel {
                 ligueModifiee.setRegion(region);
 
                 if (ligueController.modifierLigue(ligueModifiee)) {
-                    // Modification réussie, mettre à jour le tableau
                     chargerLigues();
-                    // Effacer les champs
                     nomField.setText("");
                     regionField.setText("");
                 } else {
@@ -138,9 +128,7 @@ public class LigueVue extends JPanel {
             int option = JOptionPane.showConfirmDialog(this, "Êtes-vous sûr de vouloir supprimer cette ligue ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 if (ligueController.supprimerLigue(idLigue)) {
-                    // Suppression réussie, mettre à jour le tableau
                     chargerLigues();
-                    // Effacer les champs
                     nomField.setText("");
                     regionField.setText("");
                 } else {
